@@ -38,16 +38,16 @@ class Todo:
             return False
 
         self.status = new_status
-        # self.status_changed_on = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        # self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.status_changed_on = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         return True
 
     def update_title(self, title) -> Boolean:
         self.title = title
-        # self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         return True
 
     def update_description(self, description) -> Boolean:
         self.description = description
-        # self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         return True
