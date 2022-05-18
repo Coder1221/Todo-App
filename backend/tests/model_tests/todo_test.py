@@ -1,14 +1,14 @@
 import pytest
 from models.todo import model as td
 
-
 @pytest.fixture(scope="class")
 def todo_object():
     uuid = "2w1jdsj21@3"
     title = "my_title"
     description = "short description"
     status = 2
-    created_data_class = td.Todo(uuid, title, description, status, None, None, None)
+    user_id = "@#ESWE@"
+    created_data_class = td.Todo(uuid,user_id, title, description, status, None, None, None)
     return created_data_class
 
 

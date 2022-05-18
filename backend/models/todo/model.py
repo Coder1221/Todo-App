@@ -7,6 +7,7 @@ from .status_enum import Status
 @dataclass
 class Todo:
     id: str
+    user_id: str
     title: str
     description: str
     status: int
