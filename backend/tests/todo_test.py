@@ -13,7 +13,7 @@ def todo_object():
 
 
 def test_todo_creation(todo_object):
-    assert todo_object.uuid == "2w1jdsj21@3"
+    assert todo_object.id == "2w1jdsj21@3"
     assert todo_object.title == "my_title"
     assert todo_object.description == "short description"
     assert todo_object.status == 2
