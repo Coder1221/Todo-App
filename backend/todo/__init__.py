@@ -1,2 +1,2 @@
 from .model import Todo
-from .status_enum import StatusEnum
+from .status_enum import Status

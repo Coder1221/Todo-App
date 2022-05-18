@@ -1,53 +1,47 @@
-from pydoc import cram
-from zipapp import create_archive
+import pytest
 from todo import model as td
-import json
 
 
-def create_test_object():
+@pytest.fixture(scope="class")
+def todo_object():
     uuid = "2w1jdsj21@3"
     title = "my_title"
     description = "short description"
-    status = 1
+    status = 2
     created_data_class = td.Todo(uuid, title, description, status, None, None, None)
     return created_data_class
 
 
-def test_todo_creation():
-    created_data_class = create_test_object()
-    assert created_data_class.uuid == "2w1jdsj21@3"
-    assert created_data_class.title == "my_title"
-    assert created_data_class.description == "short description"
-    assert created_data_class.status == 1
+def test_todo_creation(todo_object):
+    assert todo_object.uuid == "2w1jdsj21@3"
+    assert todo_object.title == "my_title"
+    assert todo_object.description == "short description"
+    assert todo_object.status == 2
 
 
-def test_update_status():
-    created_data_class = create_test_object()
-    # status should be updated when provided string enum
-    created_data_class.update_status("IN_PROGRESS")
-    assert created_data_class.status == 2
-    #  status should not be updated
-    created_data_class.update_status("IN_validValue")
-    assert created_data_class.status == 2
+def test_update_status(todo_object):
+    # status should not be updated when stored status is same as given
+    with pytest.raises(Exception) as e:
+        todo_object.update_status("IN_PROGRESS")
+
+    # status should not be updated
+    with pytest.raises(KeyError) as e:
+        todo_object.update_status("IN_validValue")
+
     # status shoud be updated by providing enum value
-    created_data_class.update_status(3)
-    assert created_data_class.status == 3
-    # status should not be updated provided wrong enum value
-    created_data_class.update_status(22)
-    assert created_data_class.status != 22
+    todo_object.update_status("CLOSED")
+    assert todo_object.status == 3
 
 
-def test_update_title():
-    created_data_class = create_test_object()
-    prev_title = created_data_class.title
-    created_data_class.update_title("My new Title")
-    assert created_data_class.title != prev_title
-    assert created_data_class.title == "My new Title"
+def test_update_title(todo_object):
+    prev_title = todo_object.title
+    assert todo_object.update_title("My new Title"), True
+    assert todo_object.title != prev_title
+    assert todo_object.title == "My new Title"
 
 
-def test_update_description():
-    created_data_class = create_test_object()
-    prev_description = created_data_class.description
-    created_data_class.update_description("My new Description")
-    assert created_data_class.description != prev_description
-    assert created_data_class.description == "My new Description"
+def test_update_description(todo_object):
+    prev_description = todo_object.description
+    assert todo_object.update_description("My new Description"), True
+    assert todo_object.description != prev_description
+    assert todo_object.description == "My new Description"
