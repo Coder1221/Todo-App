@@ -51,10 +51,3 @@ def test_update_description():
     created_data_class.update_description("My new Description")
     assert created_data_class.description != prev_description
     assert created_data_class.description == "My new Description"
-
-
-def test_model_should_return_json():
-    created_data_class = create_test_object()
-    parsed_json = json.loads(created_data_class.to_json())
-    assert isinstance(parsed_json, dict) == True
-    assert parsed_json["title"] == "my_title"

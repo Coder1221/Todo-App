@@ -51,14 +51,3 @@ class Todo:
         self.description = description
         # self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         return True
-
-    def to_json(self) -> json:
-        todo_dict = {
-            "title": self.title,
-            "description": self.description,
-            "status": StatusEnum(self.status).name,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-            "status_update_at": self.status_changed_on,
-        }
-        return json.dumps(todo_dict)
