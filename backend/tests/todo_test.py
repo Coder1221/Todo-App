@@ -1,5 +1,5 @@
 import pytest
-from todo import model as td
+from models.todo import model as td
 
 
 @pytest.fixture(scope="class")
