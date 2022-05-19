@@ -1,6 +1,7 @@
 import pytest
 from models.todo import model as td
 
+
 @pytest.fixture(scope="class")
 def todo_object():
     uuid = "2w1jdsj21@3"
@@ -8,11 +9,14 @@ def todo_object():
     description = "short description"
     status = 2
     user_id = "@#ESWE@"
-    created_data_class = td.Todo(uuid,user_id, title, description, status, None, None, None)
+    created_data_class = td.Todo(
+        uuid, user_id, title, description, status, None, None, None
+    )
     return created_data_class
 
 
 def test_todo_creation(todo_object):
+    print(todo_object)
     assert todo_object.id == "2w1jdsj21@3"
     assert todo_object.title == "my_title"
     assert todo_object.description == "short description"
