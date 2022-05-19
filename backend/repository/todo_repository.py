@@ -134,6 +134,19 @@ class TodoRepository(AbstractTodoRepository):
         if not success:
             raise Exception("Record Not updated")
 
+    def get_by_user_id_and_date(self, user_id: str, date: str):
+        sql = """
+            SELECT * from todo_lists where user_id = %s AND created_at::date = %s;
+        """
+
+        with self.read_cursor() as curs:
+            curs.execute(sql, [user_id, date])
+            res = curs.fetchall()
+        if res:
+            return list(map(_dict_row_to_todo, res))
+
+        raise Exception("Data Not found")
+
 
 def _dict_row_to_todo(r: DictRow) -> model.Todo:
     return model.Todo(

@@ -3,6 +3,10 @@ from datetime import date, datetime
 import time
 from .status_enum import Status
 
+# from repository.user_repository import _dict_row_to_user
+# from repository.todo_repository import _dict_row_to_todo
+from typing import List
+
 
 @dataclass
 class Todo:
@@ -41,3 +45,11 @@ class Todo:
         self.description = description
         self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         return True
+
+
+class ListTodo:
+    def __init__(self, todo_repository):
+        self.repository = todo_repository
+
+    def by_user_id(self, user_id: str, date: str) -> List[Todo]:
+        return self.repository.get_by_user_id_and_date(user_id, date)
