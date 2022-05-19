@@ -111,9 +111,10 @@ class UserRepository(AbstractUserRepository):
 
 
 def _dict_row_to_user(user_row: DictRow) -> model.User:
-    return model.User(
-        id=user_row["id"],
+    model_ = model.User(
         name=user_row["name"],
         email=user_row["email"],
         password=user_row["encrypted_password"],
     )
+    model_.id = user_row["id"]
+    return model_
