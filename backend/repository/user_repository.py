@@ -66,18 +66,20 @@ class UserRepository(AbstractUserRepository):
     def _add(self, user: model.User):
         sql = """
             INSERT INTO users(
+                id,
                 name,
                 email,
-                password
+                encrypted_password
             )
             VALUES(
                 %s,
-                %s.
+                %s,
+                %s,
                 %s
             )
         """
 
-        args = [user.name, user.email, user.password]
+        args = [user.id, user.name, user.email, user.password]
         with self.read_cursor() as curs:
             curs.execute(sql, args)
 

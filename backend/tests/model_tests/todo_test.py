@@ -4,24 +4,21 @@ from models.todo import model as td
 
 @pytest.fixture(scope="class")
 def todo_object():
-    uuid = "2w1jdsj21@3"
     title = "my_title"
     description = "short description"
     status = 2
     user_id = "@#ESWE@"
     created_data_class = td.Todo(
-        uuid, user_id, title, description, status, None, None, None
+        user_id, title, description, status
     )
     return created_data_class
 
 
 def test_todo_creation(todo_object):
-    print(todo_object)
-    assert todo_object.id == "2w1jdsj21@3"
     assert todo_object.title == "my_title"
     assert todo_object.description == "short description"
     assert todo_object.status == 2
-
+    assert todo_object.priority == 0
 
 def test_update_status(todo_object):
     # status should not be updated when stored status is same as given
@@ -49,3 +46,13 @@ def test_update_description(todo_object):
     assert todo_object.update_description("My new Description"), True
     assert todo_object.description != prev_description
     assert todo_object.description == "My new Description"
+
+def test_increase_priority(todo_object):
+    assert todo_object.priority == 0
+    todo_object.increase_priority()
+    assert todo_object.priority == 1
+    
+def test_decrease_priority(todo_object):
+    assert todo_object.priority == 0
+    todo_object.decrease_priority()
+    assert todo_object.priority == -1

@@ -70,10 +70,12 @@ class TodoRepository(AbstractTodoRepository):
     def _add(self, todo: model.Todo):
         sql = """
             INSERT INTO todo_lists (
+                id,
                 user_id, 
                 title, 
                 description,
                 status,
+                priority,
                 status_changed_on,
                 created_at,
                 updated_at
@@ -85,14 +87,18 @@ class TodoRepository(AbstractTodoRepository):
                 %s,
                 %s,
                 %s,
+                %s,
+                %s,
                 %s
             )
         """
         args = [
+            todo.id,
             todo.user_id,
             todo.title,
             todo.description,
             todo.status,
+            todo.priority,
             todo.status_changed_on,
             todo.created_at,
             todo.updated_at,
@@ -114,6 +120,7 @@ class TodoRepository(AbstractTodoRepository):
                 title = %s,
                 description = %s,
                 status = %s,
+                priority = %s,
                 status_changed_on = %s,
                 updated_at = %s
             where id = %s
@@ -125,6 +132,7 @@ class TodoRepository(AbstractTodoRepository):
                     todo.title,
                     todo.description,
                     todo.status,
+                    todo.priority,
                     todo.status_changed_on,
                     todo.updated_at,
                     todo.id,
@@ -136,7 +144,7 @@ class TodoRepository(AbstractTodoRepository):
 
     def get_by_user_id_and_date(self, user_id: str, date: str):
         sql = """
-            SELECT * from todo_lists where user_id = %s AND created_at::date = %s;
+            SELECT * from todo_lists where user_id = %s AND created_at::date = %s order by priority desc;
         """
 
         with self.read_cursor() as curs:
@@ -149,13 +157,14 @@ class TodoRepository(AbstractTodoRepository):
 
 
 def _dict_row_to_todo(r: DictRow) -> model.Todo:
-    return model.Todo(
-        id=r["id"],
+    model_ =  model.Todo(
         user_id=r["user_id"],
         title=r["title"],
         description=r["description"],
         status=r["status"],
-        status_changed_on=r["status_changed_on"],
-        created_at=r["created_at"],
-        updated_at=r["updated_at"],
     )
+    model_.priority = r["priority"]
+    model_.created_at = r["created_at"]
+    model_.updated_at = r["updated_at"]
+    model_.status_changed_on = r["status_changed_on"]
+    return model_
