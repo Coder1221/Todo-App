@@ -1,6 +1,6 @@
 import psycopg2
 from models.todo import model
-from typing import List
+from typing import List, Optional
 import abc
 from abc import abstractmethod
 from psycopg2.extras import DictRow, DictCursor
@@ -32,9 +32,9 @@ class TodoRepository(AbstractTodoRepository):
 
     def read_cursor(self):
         # passing cursor factory as dictcursor which will return resuls in dict
-        return self.cursor(cursor_factory=DictCursor)
+        return self.cursor(cursor_factory = DictCursor)
 
-    def get_by_id(self, todo_id: str) -> model.Todo:
+    def get_by_id(self, todo_id: str) -> Optional[model.Todo]:
         sql = """
             select * from todo_lists where id = %s;
         """
@@ -42,9 +42,7 @@ class TodoRepository(AbstractTodoRepository):
             curs.execute(sql, [todo_id])
             todo_row = curs.fetchone()
 
-        if todo_row:
-            todo = _dict_row_to_todo(todo_row)
-            return todo
+        return _dict_row_to_todo(todo_row) if todo_row else None
 
     def add(self, todo: model.Todo):
         sql = """
@@ -92,7 +90,7 @@ class TodoRepository(AbstractTodoRepository):
         with self.cursor() as curs:
             curs.execute(sql, [todo.id])
 
-    def save(self, todo: model.Todo) -> bool:
+    def save(self, todo: model.Todo):
         sql = """
             update todo_lists
             set 
@@ -104,22 +102,19 @@ class TodoRepository(AbstractTodoRepository):
                 updated_at = %s
             where id = %s
         """
+        
+        args = [
+            todo.title,
+            todo.description,
+            todo.status,
+            todo.priority,
+            todo.status_changed_on,
+            todo.updated_at,
+            todo.id,
+        ]
+        
         with self.read_cursor() as curs:
-            curs.execute(
-                sql,
-                [
-                    todo.title,
-                    todo.description,
-                    todo.status,
-                    todo.priority,
-                    todo.status_changed_on,
-                    todo.updated_at,
-                    todo.id,
-                ],
-            )
-            success = bool(curs.fetchone())
-        if not success:
-            raise Exception("Record Not updated")
+            curs.execute(sql,args)
 
     def get_by_user_id_and_date(self, user_id: str, date: str):
         sql = """
