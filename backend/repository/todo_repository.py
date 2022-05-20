@@ -7,38 +7,17 @@ from psycopg2.extras import DictRow, DictCursor
 
 
 class AbstractTodoRepository(abc.ABC):
-    def __init__(self):
-        self.seen: List[model.Todo] = []
-
+    @abstractmethod
     def add(self, todo: model.Todo):
-        self._add(todo)
-        self.seen.append(todo)
+        raise NotImplementedError
 
-    def get_by_id(self, todo_id: str) -> model.Todo:
-        todo = self._get_by_id(todo_id)
-        if todo:
-            self.seen.append(todo)
-        return todo
+    def get_by_id(self, todo_id: str):
+        raise NotImplementedError
 
     def delete(self, todo: model.Todo):
-        self._delete(todo)
-        self.seen.append(todo)
+        raise NotImplementedError
 
     def save(self, todo: model.Todo):
-        self._save(todo)
-        self.seen.append(todo)
-
-    @abstractmethod
-    def _add(self, todo: model.Todo):
-        raise NotImplementedError
-
-    def _get_by_id(self, todo_id: str):
-        raise NotImplementedError
-
-    def _delete(self, todo: model.Todo):
-        raise NotImplementedError
-
-    def _save(self, todo: model.Todo):
         raise NotImplementedError
 
 
@@ -55,7 +34,7 @@ class TodoRepository(AbstractTodoRepository):
         # passing cursor factory as dictcursor which will return resuls in dict
         return self.cursor(cursor_factory=DictCursor)
 
-    def _get_by_id(self, todo_id: str) -> model.Todo:
+    def get_by_id(self, todo_id: str) -> model.Todo:
         sql = """
             select * from todo_lists where id = %s;
         """
@@ -67,7 +46,7 @@ class TodoRepository(AbstractTodoRepository):
             todo = _dict_row_to_todo(todo_row)
             return todo
 
-    def _add(self, todo: model.Todo):
+    def add(self, todo: model.Todo):
         sql = """
             INSERT INTO todo_lists (
                 id,
@@ -106,14 +85,14 @@ class TodoRepository(AbstractTodoRepository):
         with self.cursor() as curs:
             curs.execute(sql, args)
 
-    def _delete(self, todo: model.Todo):
+    def delete(self, todo: model.Todo):
         sql = """
             DELETE FROM todo_lists WHERE id =%s;
         """
         with self.cursor() as curs:
             curs.execute(sql, [todo.id])
 
-    def _save(self, todo: model.Todo) -> bool:
+    def save(self, todo: model.Todo) -> bool:
         sql = """
             UPDATE todo_lists
             SET 
@@ -157,7 +136,7 @@ class TodoRepository(AbstractTodoRepository):
 
 
 def _dict_row_to_todo(r: DictRow) -> model.Todo:
-    model_ =  model.Todo(
+    model_ = model.Todo(
         user_id=r["user_id"],
         title=r["title"],
         description=r["description"],

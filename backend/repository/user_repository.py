@@ -6,38 +6,17 @@ from psycopg2.extras import DictCursor, DictRow
 
 
 class AbstractUserRepository(abc.ABC):
-    def __init__(self):
-        self.seen: List[model.User] = []
-
+    @abc.abstractmethod
     def get_by_id(self, user_id: str):
-        user = self._get_by_id(user_id)
-        if user:
-            self.seen.append(user)
-        return user
+        raise NotImplementedError
 
     def add(self, user: model.User):
-        self._add(user)
-        self.seen.append(user)
+        raise NotImplementedError
 
     def save(self, user: model.User):
-        self._save(user)
-        self.seen.append(user)
+        raise NotImplementedError
 
     def delete(self, user: model.User):
-        self._delete(user)
-        self.seen.append(user)
-
-    @abc.abstractmethod
-    def _get_by_id(self, user_id: str):
-        raise NotImplementedError
-
-    def _add(self, user: model.User):
-        raise NotImplementedError
-
-    def _save(self, user: model.User):
-        raise NotImplementedError
-
-    def _delete(self, user: model.User):
         raise NotImplementedError
 
 
@@ -52,7 +31,7 @@ class UserRepository(AbstractUserRepository):
     def read_cursor(self):
         return self.cursor(cursor_factory=DictCursor)
 
-    def _get_by_id(self, user_id: str):
+    def get_by_id(self, user_id: str):
         sql = """
             select * from users where id = %s;
         """
@@ -63,7 +42,7 @@ class UserRepository(AbstractUserRepository):
             user = _dict_row_to_user(user_row)
             return user
 
-    def _add(self, user: model.User):
+    def add(self, user: model.User):
         sql = """
             INSERT INTO users(
                 id,
@@ -83,14 +62,14 @@ class UserRepository(AbstractUserRepository):
         with self.read_cursor() as curs:
             curs.execute(sql, args)
 
-    def _delete(self, user: model.User):
+    def delete(self, user: model.User):
         sql = """
             DELETE FROM users WHERE id = %s
         """
         with self.read_cursor() as curs:
             curs.execute(sql, [user.id])
 
-    def _save(self, user: model.User) -> bool:
+    def save(self, user: model.User) -> bool:
         sql = """
             UPDATE users 
             SET 
