@@ -64,26 +64,32 @@ class ListTodo:
     def __init__(self, todo_repository):
         self.repository = todo_repository
 
-    def get_by_user_id_and_date(self, user_id: str, date: str) -> List[Todo]:
-        """Returns a list todo of certain date"""
-        return self.repository.get_by_user_id_and_date(user_id, date)
+    def get_by_user_id_and_date_by_priority(
+        self, user_id: str, date: str
+    ) -> List[Todo]:
+        """Returns a list todo of certain date order by priority"""
+        return self.repository.get_by_user_id_and_date_by_priority(user_id, date)
 
-    def sort_by_priority(self, todos: List[Todo]) -> List[Todo]:
-        """ "Will sort a list of todos based on the priority (highest number means highest priority)"""
-        """Also returns the dict of priority count"""
-        raise NotImplementedError
-
-    def increase_priority(self, todo_id: str, date: str):
-        """Increments the priority of of the given todo"""
-        todo = self.repository.get(todo_id)
-        todos = self.repository.get_by_user_id_and_date(todo.user_id, date)
-        sorted_todos, dict_priority_count = self.sort_by_priority(todos)
-
-        # in the dict find the key with the max_value
+    def priority_dict_count(self, todos: List[Todo]) -> List[Todo]:
+        """Returns the dict of priority count and max_priority"""
+        dict_ = {}
         max_priority = -1
-        for key in dict_priority_count:
-            if key > max_priority:
-                max_priority = key
+        for todo in todos:
+            try:
+                if todo.priority > max_priority:
+                    max_priority = todo.priority
+                dict_[todo.priority] = dict_[todo.priority] + 1
+            except:
+                dict_[todo.priority] = 1
+        return dict_, max_priority
+
+    def increase_priority(self, todo_id: str):
+        """Increments the priority of of the given todo"""
+        todo = self.repository.get_by_id(todo_id)
+        date = todo.created_at.strftime("%Y-%m-%d")
+
+        todos = self.repository.get_by_user_id_and_date_by_priority(todo.user_id, date)
+        dict_priority_count, max_priority = self.priority_dict_count(todos)
 
         if todo.priority < max_priority or (
             todo.priority == max_priority and dict_priority_count[max_priority] > 1
@@ -93,9 +99,9 @@ class ListTodo:
         else:
             raise Exception("Already on the highest priority")
 
-    def decrease_priority(self, todo_id: str, date: str):
+    def decrease_priority(self, todo_id: str):
         """Increments the priority of of the given todo"""
-        todo = self.repository.get(todo_id)
+        todo = self.repository.get_by_id(todo_id)
         if todo.priority > 0:
             todo.decrease_priority()
             self.repository.save(todo)

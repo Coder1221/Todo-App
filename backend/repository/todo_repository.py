@@ -32,7 +32,7 @@ class TodoRepository(AbstractTodoRepository):
 
     def read_cursor(self):
         # passing cursor factory as dictcursor which will return resuls in dict
-        return self.cursor(cursor_factory = DictCursor)
+        return self.cursor(cursor_factory=DictCursor)
 
     def get_by_id(self, todo_id: str) -> Optional[model.Todo]:
         sql = """
@@ -102,7 +102,7 @@ class TodoRepository(AbstractTodoRepository):
                 updated_at = %s
             where id = %s
         """
-        
+
         args = [
             todo.title,
             todo.description,
@@ -112,11 +112,12 @@ class TodoRepository(AbstractTodoRepository):
             todo.updated_at,
             todo.id,
         ]
-        
         with self.read_cursor() as curs:
-            curs.execute(sql,args)
+            curs.execute(sql, args)
 
-    def get_by_user_id_and_date(self, user_id: str, date: str):
+    def get_by_user_id_and_date_by_priority(self, user_id: str, date: str):
+        """Will return a list of todos of users with on the given data sorted by priority"""
+
         sql = """
             select * from todo_lists where user_id = %s and created_at::date = %s order by priority desc;
         """
@@ -137,6 +138,7 @@ def _dict_row_to_todo(r: DictRow) -> model.Todo:
         description=r["description"],
         status=r["status"],
     )
+    model_.id = r["id"]
     model_.priority = r["priority"]
     model_.created_at = r["created_at"]
     model_.updated_at = r["updated_at"]
