@@ -27,3 +27,8 @@ class User:
 
     def update_name(self, name):
         self.name = name
+
+    def login(self, password):
+        if self.check_password(password):
+            return True
+        return False
