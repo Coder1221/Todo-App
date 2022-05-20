@@ -2,13 +2,12 @@ from models.user import model as td
 import pytest
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture
 def user_obj():
-    id = "@W#@!E@Q"
     name = "test_name"
     email = "test@tajir-app.com"
     password = "123456"
-    created_obj = td.User(id, name, email, password)
+    created_obj = td.User(name, email, password)
     return created_obj
 
 
