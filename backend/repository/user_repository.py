@@ -44,13 +44,13 @@ class UserRepository(AbstractUserRepository):
 
     def add(self, user: model.User):
         sql = """
-            INSERT INTO users(
+            insert into users(
                 id,
                 name,
                 email,
                 encrypted_password
             )
-            VALUES(
+            values(
                 %s,
                 %s,
                 %s,
@@ -64,15 +64,15 @@ class UserRepository(AbstractUserRepository):
 
     def delete(self, user: model.User):
         sql = """
-            DELETE FROM users WHERE id = %s
+            delete from users where id = %s
         """
         with self.read_cursor() as curs:
             curs.execute(sql, [user.id])
 
     def save(self, user: model.User) -> bool:
         sql = """
-            UPDATE users 
-            SET 
+            update users 
+            set 
                 name = %s, 
                 email = %s,
                 encrypted_password = %s

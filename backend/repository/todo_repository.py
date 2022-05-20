@@ -48,7 +48,7 @@ class TodoRepository(AbstractTodoRepository):
 
     def add(self, todo: model.Todo):
         sql = """
-            INSERT INTO todo_lists (
+            insert into todo_lists (
                 id,
                 user_id, 
                 title, 
@@ -59,7 +59,7 @@ class TodoRepository(AbstractTodoRepository):
                 created_at,
                 updated_at
             )
-            VALUES (
+            values (
                 %s,
                 %s,
                 %s,
@@ -87,15 +87,15 @@ class TodoRepository(AbstractTodoRepository):
 
     def delete(self, todo: model.Todo):
         sql = """
-            DELETE FROM todo_lists WHERE id =%s;
+            delete from todo_lists where id = %s;
         """
         with self.cursor() as curs:
             curs.execute(sql, [todo.id])
 
     def save(self, todo: model.Todo) -> bool:
         sql = """
-            UPDATE todo_lists
-            SET 
+            update todo_lists
+            set 
                 title = %s,
                 description = %s,
                 status = %s,
@@ -123,7 +123,7 @@ class TodoRepository(AbstractTodoRepository):
 
     def get_by_user_id_and_date(self, user_id: str, date: str):
         sql = """
-            SELECT * from todo_lists where user_id = %s AND created_at::date = %s order by priority desc;
+            select * from todo_lists where user_id = %s and created_at::date = %s order by priority desc;
         """
 
         with self.read_cursor() as curs:
