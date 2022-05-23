@@ -1,7 +1,7 @@
 import psycopg2
 from models.user import model
 import abc
-from typing import List
+from typing import List, Dict
 from psycopg2.extras import DictCursor, DictRow
 
 
@@ -10,12 +10,15 @@ class AbstractUserRepository(abc.ABC):
     def get_by_id(self, user_id: str):
         raise NotImplementedError
 
+    @abc.abstractmethod
     def add(self, user: model.User):
         raise NotImplementedError
 
+    @abc.abstractmethod
     def save(self, user: model.User):
         raise NotImplementedError
 
+    @abc.abstractmethod
     def delete(self, user: model.User):
         raise NotImplementedError
 
@@ -87,6 +90,24 @@ class UserRepository(AbstractUserRepository):
 
         if not success:
             raise Exception("Record not updated")
+
+
+class FakeUserRepository(AbstractUserRepository):
+    def __init__(self):
+        super().__init__()
+        self.users: Dict[str, model.User] = {}
+
+    def get_by_id(self, user_id: str):
+        return self.users.get(user_id, None)
+
+    def add(self, user: model.User):
+        self.users[user.id] = user
+
+    def save(self, user: model.User):
+        self.users[user.id] = user
+
+    def delete(self, user: model.User):
+        self.users.pop(user.id, None)
 
 
 def _dict_row_to_user(user_row: DictRow) -> model.User:

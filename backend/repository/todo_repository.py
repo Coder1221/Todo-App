@@ -1,6 +1,6 @@
 import psycopg2
 from models.todo import model
-from typing import List, Optional
+from typing import List, Optional, Dict
 import abc
 from abc import abstractmethod
 from psycopg2.extras import DictRow, DictCursor
@@ -11,12 +11,15 @@ class AbstractTodoRepository(abc.ABC):
     def add(self, todo: model.Todo):
         raise NotImplementedError
 
+    @abstractmethod
     def get_by_id(self, todo_id: str):
         raise NotImplementedError
 
+    @abstractmethod
     def delete(self, todo: model.Todo):
         raise NotImplementedError
 
+    @abstractmethod
     def save(self, todo: model.Todo):
         raise NotImplementedError
 
@@ -129,6 +132,26 @@ class TodoRepository(AbstractTodoRepository):
             return list(map(_dict_row_to_todo, res))
 
         raise Exception("Data Not found")
+
+
+class FakeTodoRepository(AbstractTodoRepository):
+    """Fake TodoRepository for testing purposes"""
+
+    def __init__(self):
+        super().__init__()
+        self.todos: Dict[str, model.Todo] = {}
+
+    def add(self, model: model.Todo):
+        self.todos[model.id] = model
+
+    def save(self, model: model.Todo):
+        self.todos[model.id] = model
+
+    def get_by_id(self, todo_id: str) -> model.Todo:
+        return self.todos.get(todo_id, None)
+
+    def delete(self, model: model.Todo):
+        self.todos.pop(model.id, None)
 
 
 def _dict_row_to_todo(r: DictRow) -> model.Todo:
