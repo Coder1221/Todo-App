@@ -3,7 +3,7 @@ from models.todo import model as td
 import pytest
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def todo_object():
     title = "my_title"
     description = "short description"
@@ -13,7 +13,7 @@ def todo_object():
     return created_data_class
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def fake_todo_repository(request):
     repo = FakeTodoRepository()
     request.cls.repo = repo
@@ -26,6 +26,7 @@ class TestTodoRepository:
         assert self.repo.get_by_id(todo_object.id).id == todo_object.id
 
     def test_repo_get_by_id(self, todo_object):
+        self.repo.add(todo_object)
         assert self.repo.get_by_id(todo_object.id) == todo_object
 
     def test_repo_should_update_todo(self, todo_object):

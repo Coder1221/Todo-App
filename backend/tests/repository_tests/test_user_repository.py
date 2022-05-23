@@ -3,12 +3,12 @@ import pytest
 from models.user import model as td
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def user_obj():
     return td.User(name="Test User", email="tet@tajir.com", password="12345")
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def fake_user_repository(request):
     repo = user_repository.FakeUserRepository()
     request.cls.repo = repo
@@ -21,8 +21,8 @@ class TestUserRepository:
         assert self.repo.get_by_id(user_obj.id).id == user_obj.id
 
     def test_repo_get_by_id(self, user_obj):
-        r_obj = self.repo.get_by_id(user_obj.id)
-        assert r_obj.id == user_obj.id
+        self.repo.add(user_obj)
+        assert self.repo.get_by_id(user_obj.id).id == user_obj.id
 
     def test_repo_should_update(self, user_obj):
         assert user_obj.name == "Test User"
@@ -36,3 +36,11 @@ class TestUserRepository:
         assert self.repo.get_by_id(user_obj.id).id == user_obj.id
         self.repo.delete(user_obj)
         assert self.repo.get_by_id(user_obj.id) == None
+
+    def test_user_passwords_are_note_stored_in_plain_text(self, user_obj):
+        self.repo.add(user_obj)
+        assert self.repo.get_by_id(user_obj.id).password != "12345"
+        assert (
+            self.repo.get_by_id(user_obj.id).password
+            == "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5"
+        )
