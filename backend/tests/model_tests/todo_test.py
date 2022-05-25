@@ -35,14 +35,14 @@ def test_update_status(todo_object):
 
 def test_update_title(todo_object):
     prev_title = todo_object.title
-    assert todo_object.update_title("My new Title"), True
+    todo_object.update_title("My new Title")
     assert todo_object.title != prev_title
     assert todo_object.title == "My new Title"
 
 
 def test_update_description(todo_object):
     prev_description = todo_object.description
-    assert todo_object.update_description("My new Description"), True
+    todo_object.update_description("My new Description")
     assert todo_object.description != prev_description
     assert todo_object.description == "My new Description"
 

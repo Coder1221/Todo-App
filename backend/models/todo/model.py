@@ -29,7 +29,7 @@ class Todo:
         self.created_at = datetime.now()
         self.updated_at = None
 
-    def update_status(self, status) -> None:
+    def update_status(self, status):
 
         """raising keyerror in case if we don't have the key in status enum"""
         if status not in Status.__members__:
@@ -43,15 +43,13 @@ class Todo:
         self.status_changed_on = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
-    def update_title(self, title) -> bool:
+    def update_title(self, title):
         self.title = title
         self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        return True
 
-    def update_description(self, description) -> bool:
+    def update_description(self, description):
         self.description = description
         self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        return True
 
     def increase_priority(self):
         self.priority = self.priority + 1
