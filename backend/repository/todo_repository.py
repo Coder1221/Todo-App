@@ -128,10 +128,8 @@ class TodoRepository(AbstractTodoRepository):
         with self.read_cursor() as curs:
             curs.execute(sql, [user_id, date])
             res = curs.fetchall()
-        if res:
-            return list(map(_dict_row_to_todo, res))
-
-        raise Exception("Data Not found")
+        
+        return list(map(_dict_row_to_todo,res)) if res else None
 
 
 class FakeTodoRepository(AbstractTodoRepository):
