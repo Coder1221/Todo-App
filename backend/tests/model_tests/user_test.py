@@ -2,7 +2,7 @@ from models.user import model as td
 import pytest
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def user_obj():
     name = "test_name"
     email = "test@tajir-app.com"

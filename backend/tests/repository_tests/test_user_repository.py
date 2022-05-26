@@ -41,6 +41,6 @@ class TestUserRepository:
         self.repo.add(user_obj)
         assert self.repo.get_by_id(user_obj.id).password != "12345"
         assert (
-            self.repo.get_by_id(user_obj.id).password
+            self.repo.get_by_id(user_obj.id).encrypted_password
             == "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5"
         )

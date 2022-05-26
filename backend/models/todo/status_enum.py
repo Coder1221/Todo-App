@@ -1,7 +1,7 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class Status(Enum):
-    OPEN_STATUS = auto()
-    IN_PROGRESS = auto()
-    CLOSED = auto()
+    OPEN_STATUS = "OPEN"
+    IN_PROGRESS = "IN_PROGRESS"
+    CLOSED = "CLOSED"

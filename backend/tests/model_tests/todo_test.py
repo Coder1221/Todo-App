@@ -2,11 +2,11 @@ import pytest
 from models.todo import model as td
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def todo_object():
     title = "my_title"
     description = "short description"
-    status = 2
+    status = "IN_PROGRESS"
     user_id = "@#ESWE@"
     created_data_class = td.Todo(user_id, title, description, status)
     return created_data_class
@@ -15,22 +15,18 @@ def todo_object():
 def test_todo_creation(todo_object):
     assert todo_object.title == "my_title"
     assert todo_object.description == "short description"
-    assert todo_object.status == 2
+    assert todo_object.status == "IN_PROGRESS"
     assert todo_object.priority == 0
 
 
 def test_update_status(todo_object):
-    # status should not be updated when stored status is same as given
-    with pytest.raises(Exception) as e:
-        todo_object.update_status("IN_PROGRESS")
-
     # status should not be updated
     with pytest.raises(KeyError) as e:
         todo_object.update_status("IN_validValue")
 
     # status shoud be updated by providing enum value
     todo_object.update_status("CLOSED")
-    assert todo_object.status == 3
+    assert todo_object.status == "CLOSED"
 
 
 def test_update_title(todo_object):

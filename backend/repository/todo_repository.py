@@ -5,6 +5,8 @@ import abc
 from abc import abstractmethod
 from psycopg2.extras import DictRow, DictCursor
 
+# took inspiration from https://github.com/tajir-app/tajir/blob/master/ddd-template/services/catalog/adapters/repository.py
+
 
 class AbstractTodoRepository(abc.ABC):
     @abstractmethod
@@ -39,7 +41,7 @@ class TodoRepository(AbstractTodoRepository):
 
     def get_by_id(self, todo_id: str) -> Optional[model.Todo]:
         sql = """
-            select * from todo_lists where id = %s;
+            select * from todo_lists where id = %s  and deleted = false;
         """
         with self.read_cursor() as curs:
             curs.execute(sql, [todo_id])
@@ -88,7 +90,10 @@ class TodoRepository(AbstractTodoRepository):
 
     def delete(self, todo: model.Todo):
         sql = """
-            delete from todo_lists where id = %s;
+            update todo_lists 
+            set
+                deleted = True
+            where id = %s
         """
         with self.cursor() as curs:
             curs.execute(sql, [todo.id])
@@ -128,8 +133,8 @@ class TodoRepository(AbstractTodoRepository):
         with self.read_cursor() as curs:
             curs.execute(sql, [user_id, date])
             res = curs.fetchall()
-        
-        return list(map(_dict_row_to_todo,res)) if res else None
+
+        return list(map(_dict_row_to_todo, res)) if res else None
 
 
 class FakeTodoRepository(AbstractTodoRepository):
@@ -153,15 +158,14 @@ class FakeTodoRepository(AbstractTodoRepository):
 
 
 def _dict_row_to_todo(r: DictRow) -> model.Todo:
-    model_ = model.Todo(
+    return model.Todo(
         user_id=r["user_id"],
         title=r["title"],
         description=r["description"],
         status=r["status"],
+        id=r["id"],
+        priority=r["priority"],
+        created_at=r["created_at"],
+        updated_at=r["updated_at"],
+        status_changed_on=r["status_changed_on"],
     )
-    model_.id = r["id"]
-    model_.priority = r["priority"]
-    model_.created_at = r["created_at"]
-    model_.updated_at = r["updated_at"]
-    model_.status_changed_on = r["status_changed_on"]
-    return model_

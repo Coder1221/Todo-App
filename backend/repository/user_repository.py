@@ -3,6 +3,9 @@ from models.user import model
 import abc
 from typing import List, Dict
 from psycopg2.extras import DictCursor, DictRow
+from .custom_exceptions import RecordNotUpdated
+
+# took inspiration from https://github.com/tajir-app/tajir/blob/master/ddd-template/services/catalog/adapters/repository.py
 
 
 class AbstractUserRepository(abc.ABC):
@@ -36,7 +39,7 @@ class UserRepository(AbstractUserRepository):
 
     def get_by_id(self, user_id: str):
         sql = """
-            select * from users where id = %s;
+            select * from users where id = %s and deleted = false;
         """
         with self.read_cursor() as curs:
             curs.execute(sql, [user_id])
@@ -67,7 +70,10 @@ class UserRepository(AbstractUserRepository):
 
     def delete(self, user: model.User):
         sql = """
-            delete from users where id = %s
+            update users
+            set
+                deleted = True
+            where id = %s
         """
         with self.read_cursor() as curs:
             curs.execute(sql, [user.id])
@@ -83,13 +89,12 @@ class UserRepository(AbstractUserRepository):
             returning id;
         """
         args = [user.name, user.email, user.password, user.id]
-        print(args)
         with self.read_cursor() as curs:
             curs.execute(sql, args)
             success = bool(curs.fetchone())
 
         if not success:
-            raise Exception("Record not updated")
+            raise RecordNotUpdated("Record not updated")
 
 
 class FakeUserRepository(AbstractUserRepository):
@@ -111,10 +116,9 @@ class FakeUserRepository(AbstractUserRepository):
 
 
 def _dict_row_to_user(user_row: DictRow) -> model.User:
-    model_ = model.User(
+    return model.User(
+        id=user_row["id"],
         name=user_row["name"],
         email=user_row["email"],
         password=user_row["encrypted_password"],
     )
-    model_.id = user_row["id"]
-    return model_
