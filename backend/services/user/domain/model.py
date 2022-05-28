@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import hashlib
 import uuid
+import services.exceptions as errors
 
 
 @dataclass
@@ -13,7 +14,7 @@ class User:
     id: str = str(uuid.uuid4())
 
     def __post_init__(self):
-        if self.encrypted_password is None:
+        if not self.encrypted_password:
             self.encrypted_password = self.encrypt_password(self.password)
         # removing plaintext password from object
         self.password = ""
@@ -33,4 +34,4 @@ class User:
     def login(self, password: str) -> bool:
         if self.check_password(password):
             return True
-        return False
+        raise errors.LoginFailure

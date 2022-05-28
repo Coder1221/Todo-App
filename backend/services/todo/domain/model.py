@@ -20,7 +20,6 @@ class Todo:
     deleted: bool = False
 
     def update_status(self, status: str) -> None:
-
         """raising keyerror in case if we don't have the key in status enum"""
         if status not in Status.__members__:
             raise KeyError("Status {} is not valid".format(status))
@@ -39,6 +38,8 @@ class Todo:
 
     def increase_priority(self) -> None:
         self.priority = self.priority + 1
+        self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
     def decrease_priority(self) -> None:
         self.priority = self.priority - 1
+        self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")

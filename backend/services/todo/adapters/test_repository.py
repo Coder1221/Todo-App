@@ -1,5 +1,5 @@
-from repository.todo_repository import FakeTodoRepository
-from models.todo import model as td
+from services.todo.adapters import repository
+from services.todo.domain import model as td
 import pytest
 
 
@@ -15,7 +15,7 @@ def todo_object():
 
 @pytest.fixture(scope="function")
 def fake_todo_repository(request):
-    repo = FakeTodoRepository()
+    repo = repository.FakeTodoRepository()
     request.cls.repo = repo
 
 

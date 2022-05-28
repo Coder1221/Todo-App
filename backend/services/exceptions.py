@@ -12,3 +12,11 @@ class AlreadyOnHighestPriority(Exception):
 
 class AlreadyOnLowPriority(Exception):
     """Raised when todo priority is already on the lowest"""
+
+
+class LoginFailure(Exception):
+    """Raised when user password is incorrect"""
+
+
+class RecordNotUpdated(Exception):
+    """Raised when a record is not updated in repository"""

@@ -1,6 +1,7 @@
-from repository import user_repository
+# from services.user.adapters import user_repository
+from services.user.adapters import repository
 import pytest
-from models.user import model as td
+from services.user.domain import model as td
 
 
 @pytest.fixture(scope="function")
@@ -10,7 +11,7 @@ def user_obj():
 
 @pytest.fixture(scope="function")
 def fake_user_repository(request):
-    repo = user_repository.FakeUserRepository()
+    repo = repository.FakeUserRepository()
     request.cls.repo = repo
 
 

@@ -1,5 +1,5 @@
 import psycopg2
-from models.todo import model
+from services.todo.domain import model
 from typing import List, Optional, Dict
 import abc
 from abc import abstractmethod
@@ -123,7 +123,9 @@ class TodoRepository(AbstractTodoRepository):
         with self.read_cursor() as curs:
             curs.execute(sql, args)
 
-    def get_by_user_id_and_date_by_priority(self, user_id: str, date: str):
+    def get_by_user_id_and_date_by_priority(
+        self, user_id: str, date: str
+    ) -> List[model.Todo]:
         """Will return a list of todos of users with on the given data sorted by priority"""
 
         sql = """
@@ -134,8 +136,7 @@ class TodoRepository(AbstractTodoRepository):
             curs.execute(sql, [user_id, date])
             res = curs.fetchall()
 
-        return list(map(_dict_row_to_todo, res)) if res else None
-
+        return [_dict_row_to_todo(todo) for todo in res] if res else None
 
 class FakeTodoRepository(AbstractTodoRepository):
     """Fake TodoRepository for testing purposes"""
