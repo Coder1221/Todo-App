@@ -1,6 +1,11 @@
 from flask import Flask, request
 import jwt
 from functools import wraps
+import sys
+
+# to tell python to include/load the previous path
+sys.path.append("..")
+
 from services.user.entrypoints import queries as user_queries
 from services.user.entrypoints import commands as user_commands
 from services.todo.entrypoints import queries as todo_queries
@@ -30,8 +35,8 @@ def login():
             "message": "Successfull login",
             "token": jwt_token,
         }
-    except errors.LoginFailure:
-        return {"success": False, "message": "Wrong credentials", "token": ""}
+    except Exception as e:
+        return {"success": False, "message": str(e), "token": ""}
 
 
 if __name__ == "__main__":

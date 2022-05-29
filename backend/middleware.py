@@ -4,20 +4,22 @@ from flask import request
 from services.user.entrypoints import queries
 from services.user.adapters.repository import UserRepository
 from services.todo.adapters.repository import TodoRepository
-
+import os
 import psycopg2
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def repo_for_todo():
     conn = psycopg2.connect(
-        host="localhost", database="todo", user="abdurrehmansajid", password="luminite"
+        host=os.getenv("localhost"), database=os.getenv("PG_DB_NAME"), user=os.getenv("PG_USER"), password=os.getenv("PG_PASSWORD")
     )
     return TodoRepository(conn)
 
 
 def repo_for_user():
     conn = psycopg2.connect(
-        host="localhost", database="todo", user="abdurrehmansajid", password="luminite"
+        host=os.getenv("localhost"), database=os.getenv("PG_DB_NAME"), user=os.getenv("PG_USER"), password=os.getenv("PG_PASSWORD")        
     )
     return UserRepository(conn)
 
