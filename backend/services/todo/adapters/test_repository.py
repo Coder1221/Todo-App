@@ -1,5 +1,10 @@
-from services.todo.adapters import repository
-from services.todo.domain import model as td
+# from backend.services.todo.domain import model as td
+# from backend.services.todo.adapters import repository
+
+import backend.services.todo.domain.model as model
+import backend.services.todo.adapters.repository as repository
+
+
 import pytest
 
 
@@ -9,7 +14,7 @@ def todo_object():
     description = "short description"
     status = 2
     user_id = "@#ESWE@"
-    created_data_class = td.Todo(user_id, title, description, status)
+    created_data_class = model.Todo(user_id, title, description, status)
     return created_data_class
 
 

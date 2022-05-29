@@ -7,18 +7,21 @@ from services.todo.adapters.repository import TodoRepository
 
 import psycopg2
 
+
 def repo_for_todo():
     conn = psycopg2.connect(
         host="localhost", database="todo", user="abdurrehmansajid", password="luminite"
     )
     return TodoRepository(conn)
 
+
 def repo_for_user():
     conn = psycopg2.connect(
         host="localhost", database="todo", user="abdurrehmansajid", password="luminite"
     )
     return UserRepository(conn)
-    
+
+
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -30,8 +33,8 @@ def token_required(f):
                 "data": None,
                 "error": "Unauthorized",
             }, 401
-        repo  = repo_for_user()
-        current_user = queries.authenticate_jwt_token(token , repo)
+        repo = repo_for_user()
+        current_user = queries.authenticate_jwt_token(token, repo)
         if current_user is None:
             return {
                 "success": False,

@@ -1,4 +1,4 @@
-from services.user.domain import model as td
+import backend.services.user.domain.model as td
 import pytest
 
 
@@ -22,8 +22,3 @@ def test_encrypt_password(user_obj):
         user_obj.encrypt_password("123")
         == "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
     )
-
-
-def test_user_login(user_obj):
-    assert user_obj.login("123456") == True
-    # assert user_obj.login("12345") == services.exceptions.LoginFailure

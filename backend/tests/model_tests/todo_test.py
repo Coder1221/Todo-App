@@ -1,5 +1,5 @@
 import pytest
-from services.todo.domain import model as td
+import backend.services.todo.domain.model as td
 
 
 @pytest.fixture(scope="function")

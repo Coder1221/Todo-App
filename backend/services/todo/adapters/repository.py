@@ -1,5 +1,5 @@
 import psycopg2
-from services.todo.domain import model
+import backend.services.todo.domain.model as model
 from typing import List, Optional, Dict
 import abc
 from abc import abstractmethod

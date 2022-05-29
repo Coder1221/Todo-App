@@ -21,5 +21,6 @@ class LoginFailure(Exception):
 class RecordNotUpdated(Exception):
     """Raised when a record is not updated in repository"""
 
+
 class InvalidJwtToken(Exception):
     """Raised when given token is invalid"""

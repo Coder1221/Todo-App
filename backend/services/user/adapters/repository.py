@@ -1,9 +1,9 @@
 import psycopg2
-from services.user.domain import model
+import backend.services.user.domain.model as model
 import abc
 from typing import List, Dict
 from psycopg2.extras import DictCursor, DictRow
-from services.exceptions import RecordNotUpdated
+from backend.services.exceptions import RecordNotUpdated
 
 # took inspiration from https://github.com/tajir-app/tajir/blob/master/ddd-template/services/catalog/adapters/repository.py
 

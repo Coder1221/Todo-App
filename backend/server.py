@@ -6,7 +6,7 @@ from services.user.entrypoints import commands as user_commands
 from services.todo.entrypoints import queries as todo_queries
 from services.todo.entrypoints import commands as todo_commands
 from services.user.adapters.repository import UserRepository
-from middleware import token_required , repo_for_todo , repo_for_user
+from middleware import token_required, repo_for_todo, repo_for_user
 import services.exceptions as errors
 
 app = Flask(__name__)
@@ -32,6 +32,7 @@ def login():
         }
     except errors.LoginFailure:
         return {"success": False, "message": "Wrong credentials", "token": ""}
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="localhost")

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 import time
-from .status_enum import Status
+import backend.services.todo.domain.status_enum as status_enum
 from typing import List
 import uuid
 
@@ -21,10 +21,10 @@ class Todo:
 
     def update_status(self, status: str) -> None:
         """raising keyerror in case if we don't have the key in status enum"""
-        if status not in Status.__members__:
+        if status not in status_enum.Status.__members__:
             raise KeyError("Status {} is not valid".format(status))
 
-        self.status = Status[status].value
+        self.status = status_enum.Status[status].value
         self.status_changed_on = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         self.updated_at = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
