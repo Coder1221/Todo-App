@@ -1,5 +1,5 @@
 from services.user.domain import model as td
-from services.user.domain import repository
+from services.user.adapters import repository
 
 
 def create_user_account(

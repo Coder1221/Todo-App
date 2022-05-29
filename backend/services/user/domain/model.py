@@ -20,18 +20,15 @@ class User:
         self.password = ""
 
     def encrypt_password(self, password: str) -> str:
+        """Encrypt the password with one way hash sha256 algorithm"""
         encoded = password.encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
 
     def check_password(self, password: str) -> bool:
+        """Creates sha256 hash for the given password and check if the stored hash in object is same or not"""
         encoded = password.encode("utf-8")
         password_ = hashlib.sha256(encoded).hexdigest()
         return password_ == self.encrypted_password
 
     def update_name(self, name: str) -> None:
         self.name = name
-
-    def login(self, password: str) -> bool:
-        if self.check_password(password):
-            return True
-        raise errors.LoginFailure

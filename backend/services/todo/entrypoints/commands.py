@@ -1,7 +1,7 @@
 from services.todo.adapters import repository
 import services.todo.domain.model as model
 from typing import List, Dict, Tuple
-import backend.services.exceptions as errors
+import services.exceptions as errors
 
 
 def create_todo(
@@ -37,7 +37,7 @@ def increase_priority(
 
     max_priority = _max_priority(todos_by_created_date)
 
-    # if Max priority of todos is less than  the given todo priority or 
+    # if Max priority of todos is less than  the given todo priority or
     # given todo priority is equal to max priority and count of max_priority is greter than one
     # then we will increase the priority
 
