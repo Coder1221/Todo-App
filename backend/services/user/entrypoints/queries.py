@@ -7,4 +7,3 @@ def user_login(user_obj: td.User, password: str) -> bool:
     if user_obj.check_password(password):
         return True
     raise errors.LoginFailure
-ßßß
