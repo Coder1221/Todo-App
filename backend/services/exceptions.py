@@ -24,3 +24,7 @@ class RecordNotUpdated(Exception):
 
 class InvalidJwtToken(Exception):
     """Raised when given token is invalid"""
+
+
+class UserNotFound(Exception):
+    """Raised when a user is not found given email"""

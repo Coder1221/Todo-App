@@ -25,6 +25,10 @@ class AbstractUserRepository(abc.ABC):
     def delete(self, user: model.User):
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_by_email(self, email: str):
+        raise NotImplementedError
+
 
 class UserRepository(AbstractUserRepository):
     def __init__(self, db_pool):
@@ -96,6 +100,16 @@ class UserRepository(AbstractUserRepository):
         if not success:
             raise RecordNotUpdated("Record not updated")
 
+    def get_by_email(self, email: str) -> model.User:
+        sql = """
+            select * from users where email = %s;
+        """
+        with self.read_cursor() as cursor:
+            cursor.execute(sql, [email])
+            user_row = cursor.fetchone()
+        if user_row:
+            return _dict_row_to_user(user_row)
+
 
 class FakeUserRepository(AbstractUserRepository):
     def __init__(self):
@@ -113,6 +127,12 @@ class FakeUserRepository(AbstractUserRepository):
 
     def delete(self, user: model.User):
         self.users.pop(user.id, None)
+
+    def get_by_email(self, email: str):
+        for i in self.users.values():
+            if i.email == email:
+                return self.users[i.id]
+        return None
 
 
 def _dict_row_to_user(user_row: DictRow) -> model.User:

@@ -1,9 +1,8 @@
-from services.user.domain import model
-import services.exceptions as errors
-from services.user.adapters import repository
+from backend.services.user.domain import model
+from backend.services.user.adapters import repository
 import jwt
-from services.user.entrypoints import queries
-import services.exceptions as errors
+from backend.services.user.entrypoints import queries
+import backend.services.exceptions as errors
 from typing import Optional
 
 
@@ -18,7 +17,7 @@ def authenticate_jwt_token(
     token: str, repo: repository.AbstractUserRepository
 ) -> model.User:
     """Authenticates the given token and it will return user object based on the decoded token id"""
-    data = jwt.decode(token, "some_secret", jwt_algorithum=["HS256"])
+    data = jwt.decode(token, "some_secret", algorithms=["HS256"])
     current_user = repo.get_by_id(data["user_id"])
     if not current_user:
         raise errors.InvalidJwtToken
@@ -39,3 +38,5 @@ def user_jwt_token(
         payload = {"user_id": r_user_obj.id}
         jwt_token = jwt.encode(payload, jwt_secret, jwt_algorithum)
         return jwt_token
+    else:
+        raise errors.UserNotFound("User not found")
