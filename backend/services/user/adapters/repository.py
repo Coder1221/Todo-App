@@ -52,7 +52,7 @@ class UserRepository(AbstractUserRepository):
             user = _dict_row_to_user(user_row)
             return user
 
-    def add(self, user: model.User):
+    def add(self, user: model.User) -> model.User:
         sql = """
             insert into users(
                 id,
@@ -66,11 +66,15 @@ class UserRepository(AbstractUserRepository):
                 %s,
                 %s
             )
+            returning
+            *
         """
-
-        args = [user.id, user.name, user.email, user.password]
+        args = [user.id, user.name, user.email, user.encrypted_password]
         with self.read_cursor() as curs:
             curs.execute(sql, args)
+            created_row = curs.fetchone()
+
+        return _dict_row_to_user(created_row) if created_row else None
 
     def delete(self, user: model.User):
         sql = """
@@ -119,8 +123,9 @@ class FakeUserRepository(AbstractUserRepository):
     def get_by_id(self, user_id: str):
         return self.users.get(user_id, None)
 
-    def add(self, user: model.User):
+    def add(self, user: model.User) -> model.User:
         self.users[user.id] = user
+        return user
 
     def save(self, user: model.User):
         self.users[user.id] = user

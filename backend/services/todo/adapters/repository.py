@@ -1,9 +1,9 @@
-import psycopg2
 import backend.services.todo.domain.model as model
 from typing import List, Optional, Dict
 import abc
 from abc import abstractmethod
-from psycopg2.extras import DictRow, DictCursor
+from psycopg2.extras import DictRow, DictCursor, RealDictCursor
+import backend.services.exceptions as errors
 
 # took inspiration from https://github.com/tajir-app/tajir/blob/master/ddd-template/services/catalog/adapters/repository.py
 
@@ -49,7 +49,7 @@ class TodoRepository(AbstractTodoRepository):
 
         return _dict_row_to_todo(todo_row) if todo_row else None
 
-    def add(self, todo: model.Todo):
+    def add(self, todo: model.Todo)-> model.Todo:
         sql = """
             insert into todo_lists (
                 id,
@@ -73,6 +73,8 @@ class TodoRepository(AbstractTodoRepository):
                 %s,
                 %s
             )
+            returning
+            *
         """
         args = [
             todo.id,
@@ -85,8 +87,14 @@ class TodoRepository(AbstractTodoRepository):
             todo.created_at,
             todo.updated_at,
         ]
-        with self.cursor() as curs:
+        with self.cursor(cursor_factory=RealDictCursor) as curs:
             curs.execute(sql, args)
+            res = curs.fetchone()
+
+        if not res:
+            raise errors.TodoCreationError("Todo creation error")
+
+        return _dict_row_to_todo(res)
 
     def delete(self, todo: model.Todo):
         sql = """
@@ -146,8 +154,9 @@ class FakeTodoRepository(AbstractTodoRepository):
         super().__init__()
         self.todos: Dict[str, model.Todo] = {}
 
-    def add(self, model: model.Todo):
+    def add(self, model: model.Todo) -> model.Todo:
         self.todos[model.id] = model
+        return model
 
     def save(self, model: model.Todo):
         self.todos[model.id] = model

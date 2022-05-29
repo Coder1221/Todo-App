@@ -2,6 +2,10 @@ class TodoNotFound(Exception):
     """Raised when a Todo is not found"""
 
 
+class TodoCreationError(Exception):
+    """Raised when a Todo is not created"""
+
+
 class UnAuthorized(Exception):
     """Raised when a user wants to access a resource that is not authorized"""
 
