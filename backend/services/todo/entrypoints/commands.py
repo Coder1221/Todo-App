@@ -1,7 +1,7 @@
-from services.todo.adapters import repository
-import services.todo.domain.model as model
+from backend.services.todo.adapters import repository
+import backend.services.todo.domain.model as model
 from typing import List, Dict, Tuple
-import services.exceptions as errors
+import backend.services.exceptions as errors
 
 
 def create_todo(
@@ -10,12 +10,13 @@ def create_todo(
     description: str,
     status: str,
     repo: repository.AbstractTodoRepository,
-) -> None:
+) -> model.Todo:
     """Create a new todo"""
     todo = model.Todo(
         user_id=user_id, title=title, description=description, status=status
     )
-    repo.add(todo)
+    todo = repo.add(todo)
+    return todo
 
 
 def increase_priority(
