@@ -138,6 +138,7 @@ class TodoRepository(AbstractTodoRepository):
 
         return [_dict_row_to_todo(todo) for todo in res] if res else None
 
+
 class FakeTodoRepository(AbstractTodoRepository):
     """Fake TodoRepository for testing purposes"""
 
