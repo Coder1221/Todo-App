@@ -14,13 +14,15 @@ def user_login(user_obj: model.User, password: str) -> bool:
     raise errors.LoginFailure
 
 
-def authenticate(token: str, repo: repository.AbstractUserRepository) -> model.User:
-    try:
-        data = jwt.decode(token, "some_secret", jwt_algorithum=["HS256"])
-        current_user = repo.get_by_id(data["user_id"])
-        return current_user
-    except Exception as e:
-        return None
+def authenticate_jwt_token(
+    token: str, repo: repository.AbstractUserRepository
+) -> model.User:
+    """Authenticates the given token and it will return user object based on the decoded token id"""
+    data = jwt.decode(token, "some_secret", jwt_algorithum=["HS256"])
+    current_user = repo.get_by_id(data["user_id"])
+    if not current_user:
+        raise errors.InvalidJwtToken
+    return current_user
 
 
 def user_jwt_token(
@@ -33,10 +35,7 @@ def user_jwt_token(
     r_user_obj = repo.get_by_email(email)
 
     if r_user_obj:
-        try:
-            can_login = queries.user_login(r_user_obj, password)
-            payload = {"user_id": r_user_obj.id}
-            jwt_token = jwt.encode(payload, jwt_secret, jwt_algorithum)
-            return jwt_token
-        except errors.LoginFailure as e:
-            return None
+        can_login = queries.user_login(r_user_obj, password)
+        payload = {"user_id": r_user_obj.id}
+        jwt_token = jwt.encode(payload, jwt_secret, jwt_algorithum)
+        return jwt_token
