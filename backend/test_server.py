@@ -1,9 +1,25 @@
 from server import app
 import json
 import pytest
+from middleware import repo_for_todo, repo_for_user
 
 app.testing = True
 client = app.test_client()
+
+
+def test_user_signup(client=client):
+    payload = json.dumps(
+        {
+            "name": "user_for_testing",
+            "email": "user_for_testing@lums.edu.pk",
+            "password": "random_string",
+        }
+    )
+    res = client.post(
+        "/signup", headers={"Content-Type": "application/json"}, data=payload
+    )
+    json_data = json.loads(res.data)
+    assert json_data["success"] == True
 
 
 @pytest.fixture(scope="function")
@@ -72,15 +88,18 @@ def test_create_todo(valid_user_token, client=client):
     response = _create_todo(valid_user_token, client)
     json_data = json.loads(response.data)
     assert json_data["success"] == True
-    return json_data
+    # db clean up
+    repo = repo_for_todo()
+    todo = repo.get_by_id(json_data["data"]["id"])
+    repo.delete(todo)
 
 
 def test_increase_priority(valid_user_token, client=client):
     response1 = _create_todo(valid_user_token, client)
-    response2 = _create_todo(valid_user_token, client)
 
     json_data = json.loads(response1.data)
     uuid_of_todo1 = json_data["data"]["id"]
+
     res = client.post(
         "/todo/{}/increase_priority".format(uuid_of_todo1),
         headers={
@@ -91,3 +110,7 @@ def test_increase_priority(valid_user_token, client=client):
     assert res.status_code == 200
     json_data = json.loads(res.data)
     assert json_data["success"] == True
+    # db clean up
+    repo = repo_for_todo()
+    todo = repo.get_by_id(uuid_of_todo1)
+    repo.delete(todo)
