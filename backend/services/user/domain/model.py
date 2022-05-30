@@ -8,7 +8,7 @@ import services.exceptions as errors
 class User:
     name: str
     email: str
-    password: str
+    password: str = None
     deleted: bool = False
     encrypted_password: str = None
     id: str = str(uuid.uuid4())

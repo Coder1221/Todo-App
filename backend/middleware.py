@@ -18,6 +18,7 @@ def repo_for_todo():
         user=os.getenv("PG_USER"),
         password=os.getenv("PG_PASSWORD"),
     )
+    conn.set_session(autocommit=True)
     return TodoRepository(conn)
 
 
@@ -28,6 +29,7 @@ def repo_for_user():
         user=os.getenv("PG_USER"),
         password=os.getenv("PG_PASSWORD"),
     )
+    conn.set_session(autocommit=True)
     return UserRepository(conn)
 
 

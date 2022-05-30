@@ -32,7 +32,6 @@ def user_jwt_token(
     jwt_algorithum = "HS256"
 
     r_user_obj = repo.get_by_email(email)
-
     if r_user_obj:
         can_login = queries.user_login(r_user_obj, password)
         payload = {"user_id": r_user_obj.id}
