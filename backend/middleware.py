@@ -10,16 +10,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def repo_for_todo():
     conn = psycopg2.connect(
-        host=os.getenv("localhost"), database=os.getenv("PG_DB_NAME"), user=os.getenv("PG_USER"), password=os.getenv("PG_PASSWORD")
+        host=os.getenv("localhost"),
+        database=os.getenv("PG_DB_NAME"),
+        user=os.getenv("PG_USER"),
+        password=os.getenv("PG_PASSWORD"),
     )
     return TodoRepository(conn)
 
 
 def repo_for_user():
     conn = psycopg2.connect(
-        host=os.getenv("localhost"), database=os.getenv("PG_DB_NAME"), user=os.getenv("PG_USER"), password=os.getenv("PG_PASSWORD")        
+        host=os.getenv("localhost"),
+        database=os.getenv("PG_DB_NAME"),
+        user=os.getenv("PG_USER"),
+        password=os.getenv("PG_PASSWORD"),
     )
     return UserRepository(conn)
 

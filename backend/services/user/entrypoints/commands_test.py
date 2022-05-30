@@ -1,7 +1,7 @@
 import pytest
-import backend.services.user.entrypoints.commands as user_commands
-import backend.services.user.domain.model as td
-import backend.services.user.adapters.repository as repository
+import services.user.entrypoints.commands as user_commands
+import services.user.domain.model as td
+import services.user.adapters.repository as repository
 
 
 def test_create_user_account():

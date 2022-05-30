@@ -1,7 +1,7 @@
-from backend.services.todo.adapters import repository
-import backend.services.todo.domain.model as model
+from services.todo.adapters import repository
+import services.todo.domain.model as model
 from typing import List, Dict, Tuple
-import backend.services.exceptions as errors
+import services.exceptions as errors
 
 
 def create_todo(

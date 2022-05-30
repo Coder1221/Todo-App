@@ -1,8 +1,8 @@
-import backend.services.user.domain.model as td
+import services.user.domain.model as td
 import pytest
-import backend.services.user.entrypoints.queries as user_queries
-import backend.services.exceptions as errors
-import backend.services.user.adapters.repository as repository
+import services.user.entrypoints.queries as user_queries
+import services.exceptions as errors
+import services.user.adapters.repository as repository
 
 
 @pytest.fixture(scope="function")

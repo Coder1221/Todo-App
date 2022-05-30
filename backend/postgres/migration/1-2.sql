@@ -1,19 +1,20 @@
-create table users if not exists(
-    id  UUID PRIMARY KEY,
-    name varchar(255) ,
-    email varchar(255),
-    encrypted_password varchar(255) not null,
-    deleted boolean default false
+CREATE TABLE IF NOT EXISTS users(
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL, 
+    encrypted_password VARCHAR(255),
+    deleted boolean DEFAULT FALSE
 );
 
-create table todo_lists if not exists(
-    id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(user_id),
-    title varchar(255) not null,
-    description varchar(255) ,
-    priority integer default 0,
-    status varchar default 'OPEN',
-    created_at TIMESTAMP default current_timestamp,
+CREATE TABLE IF NOT EXISTS todo_lists (
+    id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE, 
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    priority INTEGER NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'OPEN',
+    created_at TIMESTAMP not NULL,
     updated_at TIMESTAMP,
-    deleted boolean default false
+    deleted boolean DEFAULT FALSE,
+    status_changed_on TIMESTAMP
 );

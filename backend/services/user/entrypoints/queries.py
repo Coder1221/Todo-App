@@ -1,8 +1,8 @@
-from backend.services.user.domain import model
-from backend.services.user.adapters import repository
+from services.user.domain import model
+from services.user.adapters import repository
 import jwt
-from backend.services.user.entrypoints import queries
-import backend.services.exceptions as errors
+from services.user.entrypoints import queries
+import services.exceptions as errors
 from typing import Optional
 
 

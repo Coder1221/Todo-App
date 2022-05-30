@@ -1,8 +1,5 @@
-# from backend.services.todo.domain import model as td
-# from backend.services.todo.adapters import repository
-
-import backend.services.todo.domain.model as model
-import backend.services.todo.adapters.repository as repository
+import services.todo.domain.model as model
+import services.todo.adapters.repository as repository
 
 
 import pytest

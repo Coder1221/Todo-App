@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import hashlib
 import uuid
-import backend.services.exceptions as errors
+import services.exceptions as errors
 
 
 @dataclass

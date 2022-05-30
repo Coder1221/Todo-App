@@ -1,9 +1,9 @@
-import backend.services.todo.domain.model as model
+import services.todo.domain.model as model
 from typing import List, Optional, Dict
 import abc
 from abc import abstractmethod
 from psycopg2.extras import DictRow, DictCursor, RealDictCursor
-import backend.services.exceptions as errors
+import services.exceptions as errors
 
 # took inspiration from https://github.com/tajir-app/tajir/blob/master/ddd-template/services/catalog/adapters/repository.py
 
@@ -49,7 +49,7 @@ class TodoRepository(AbstractTodoRepository):
 
         return _dict_row_to_todo(todo_row) if todo_row else None
 
-    def add(self, todo: model.Todo)-> model.Todo:
+    def add(self, todo: model.Todo) -> model.Todo:
         sql = """
             insert into todo_lists (
                 id,

@@ -1,4 +1,4 @@
-import backend.services.user.domain.model as td
+import services.user.domain.model as td
 import pytest
 
 

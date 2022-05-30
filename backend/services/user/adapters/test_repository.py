@@ -1,6 +1,6 @@
 import pytest
-import backend.services.user.domain.model as td
-import backend.services.user.adapters.repository as repository
+import services.user.domain.model as td
+import services.user.adapters.repository as repository
 
 
 @pytest.fixture(scope="function")

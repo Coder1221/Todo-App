@@ -3,8 +3,6 @@ import jwt
 from functools import wraps
 import sys
 
-# to tell python to include/load the previous path
-sys.path.append("..")
 
 from services.user.entrypoints import queries as user_queries
 from services.user.entrypoints import commands as user_commands

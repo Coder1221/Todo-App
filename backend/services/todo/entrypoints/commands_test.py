@@ -1,10 +1,10 @@
-import backend.services.todo.entrypoints.commands as todo_commands
-import backend.services.exceptions as errors
+import services.todo.entrypoints.commands as todo_commands
+import services.exceptions as errors
 import pytest
-import backend.services.user.adapters.repository as user_repository
-import backend.services.todo.adapters.repository as todo_repository
-import backend.services.user.domain.model as user_model
-import backend.services.todo.domain.model as todo_model
+import services.user.adapters.repository as user_repository
+import services.todo.adapters.repository as todo_repository
+import services.user.domain.model as user_model
+import services.todo.domain.model as todo_model
 
 
 @pytest.fixture(scope="function")
