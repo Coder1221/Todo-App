@@ -67,7 +67,7 @@ def decrease_priority(
         raise errors.AlreadyOnLowPriority("Already on the lowest priority")
 
 
-def _max_priority(self, todos: List[model.Todo]) -> int:
+def _max_priority(todos: List[model.Todo]) -> int:
     """Returns the maximum priority for a given list of todos"""
     max_priority = -1
     for todo in todos:
@@ -76,7 +76,7 @@ def _max_priority(self, todos: List[model.Todo]) -> int:
     return max_priority
 
 
-def _priority_dict_count(self, todos: List[model.Todo]) -> Dict:
+def _priority_dict_count(todos: List[model.Todo]) -> Dict:
     """Returns the dict of priority count where key is the priority and value is the number of times that priority appeared"""
     dict_ = {}
     for todo in todos:
