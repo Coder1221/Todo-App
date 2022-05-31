@@ -31,7 +31,8 @@ def test_todo_creation(user_obj, todo_object):
     user_repo = user_repository.FakeUserRepository()
     todo_repo = todo_repository.FakeTodoRepository()
 
-    r_user = user_repo.add(user_obj)
+    user_repo.add(user_obj)
+    r_user = user_repo.get_by_id(user_obj.id)
     saved_todo_id = todo_commands.create_todo(
         r_user.id,
         todo_object.title,
@@ -49,7 +50,8 @@ def test_decrease_priority(user_obj, todo_object):
     user_repo = user_repository.FakeUserRepository()
     todo_repo = todo_repository.FakeTodoRepository()
 
-    r_user = user_repo.add(user_obj)
+    user_repo.add(user_obj)
+    r_user = user_repo.get_by_id(user_obj.id)
     todo_object.user_id = r_user.id
 
     todo_repo.add(todo_object)

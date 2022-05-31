@@ -118,9 +118,8 @@ class FakeUserRepository(AbstractUserRepository):
     def get_by_id(self, user_id: str):
         return self.users.get(user_id, None)
 
-    def add(self, user: model.User) -> model.User:
+    def add(self, user: model.User) -> None:
         self.users[user.id] = user
-        return user
 
     def save(self, user: model.User):
         self.users[user.id] = user
