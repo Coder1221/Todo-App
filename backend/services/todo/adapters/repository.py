@@ -49,7 +49,7 @@ class TodoRepository(AbstractTodoRepository):
 
         return _dict_row_to_todo(todo_row) if todo_row else None
 
-    def add(self, todo: model.Todo) -> model.Todo:
+    def add(self, todo: model.Todo) -> None:
         sql = """
             insert into todo_lists (
                 id,
@@ -73,8 +73,6 @@ class TodoRepository(AbstractTodoRepository):
                 %s,
                 %s
             )
-            returning
-            *
         """
         args = [
             todo.id,
@@ -89,12 +87,6 @@ class TodoRepository(AbstractTodoRepository):
         ]
         with self.cursor(cursor_factory=RealDictCursor) as curs:
             curs.execute(sql, args)
-            res = curs.fetchone()
-
-        if not res:
-            raise errors.TodoCreationError("Todo creation error")
-
-        return _dict_row_to_todo(res)
 
     def delete(self, todo: model.Todo):
         sql = """
@@ -154,9 +146,8 @@ class FakeTodoRepository(AbstractTodoRepository):
         super().__init__()
         self.todos: Dict[str, model.Todo] = {}
 
-    def add(self, model: model.Todo) -> model.Todo:
+    def add(self, model: model.Todo) -> None:
         self.todos[model.id] = model
-        return model
 
     def save(self, model: model.Todo):
         self.todos[model.id] = model

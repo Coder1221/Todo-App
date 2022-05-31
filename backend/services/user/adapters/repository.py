@@ -52,7 +52,7 @@ class UserRepository(AbstractUserRepository):
             user = _dict_row_to_user(user_row)
             return user
 
-    def add(self, user: model.User) -> model.User:
+    def add(self, user: model.User) -> None:
         sql = """
             insert into users(
                 id,
@@ -66,15 +66,10 @@ class UserRepository(AbstractUserRepository):
                 %s,
                 %s
             )
-            returning
-            *
         """
         args = [user.id, user.name, user.email, user.encrypted_password]
         with self.read_cursor() as curs:
             curs.execute(sql, args)
-            created_row = curs.fetchone()
-
-        return _dict_row_to_user(created_row) if created_row else None
 
     def delete(self, user: model.User):
         sql = """
@@ -111,7 +106,7 @@ class UserRepository(AbstractUserRepository):
         with self.read_cursor() as cursor:
             cursor.execute(sql, [email])
             user_row = cursor.fetchone()
-        
+
         return _dict_row_to_user(user_row) if user_row else None
 
 

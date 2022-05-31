@@ -11,17 +11,19 @@ def create_todo(
     description: str,
     status: str,
     repo: repository.AbstractTodoRepository,
-) -> model.Todo:
+) -> str:
     """Create a new todo"""
+    todo_uuid = str(uuid.uuid4())
     todo = model.Todo(
-        id=str(uuid.uuid4()),
+        id=todo_uuid,
         user_id=user_id,
         title=title,
         description=description,
         status=status,
     )
-    todo = repo.add(todo)
-    return todo
+    repo.add(todo)
+    # returning todo_uuid because we need it for testing purposes
+    return todo_uuid
 
 
 def increase_priority(

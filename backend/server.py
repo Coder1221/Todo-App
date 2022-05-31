@@ -41,12 +41,8 @@ def user_signup():
     email = body_json["email"]
     password = body_json["password"]
     try:
-        user = user_commands.create_user_account(name, email, password, repo_for_user())
-        return {
-            "success": True,
-            "message": "Account created successfully",
-            "data": user,
-        }
+        user_commands.create_user_account(name, email, password, repo_for_user())
+        return {"success": True, "message": "Account created successfully"}
     except Exception as e:
         return {"success": False, "message": str(e)}
 
@@ -77,10 +73,14 @@ def create_todo(current_user):
                 "Requested body is missing attributes for todo"
             )
 
-        todo = todo_commands.create_todo(
+        created_todo_id = todo_commands.create_todo(
             current_user.id, title, description, status, repo=repo_for_todo()
         )
-        return {"success": True, "message": "Todo created successfully", "data": todo}
+        return {
+            "success": True,
+            "message": "Todo created successfully",
+            "todo_id": created_todo_id,
+        }
     except Exception as e:
         return {"success": False, "message": str(e), "data": []}
 

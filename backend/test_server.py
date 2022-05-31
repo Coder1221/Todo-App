@@ -79,7 +79,7 @@ def test_delete_todo(valid_user_token, client=client):
     created_todo = _create_todo(valid_user_token, client)
     response = json.loads(created_todo.data)
     assert response["success"] == True
-    res = _delete_todo(valid_user_token, client, response["data"]["id"])
+    res = _delete_todo(valid_user_token, client, response["todo_id"])
     res = json.loads(res.data)
     assert res["success"] == True
 
@@ -90,7 +90,7 @@ def test_create_todo(valid_user_token, client=client):
     assert json_data["success"] == True
     # db clean up
     repo = repo_for_todo()
-    todo = repo.get_by_id(json_data["data"]["id"])
+    todo = repo.get_by_id(json_data["todo_id"])
     repo.delete(todo)
 
 
@@ -98,7 +98,7 @@ def test_increase_priority(valid_user_token, client=client):
     response1 = _create_todo(valid_user_token, client)
 
     json_data = json.loads(response1.data)
-    uuid_of_todo1 = json_data["data"]["id"]
+    uuid_of_todo1 = json_data["todo_id"]
 
     res = client.post(
         "/todo/{}/increase_priority".format(uuid_of_todo1),
