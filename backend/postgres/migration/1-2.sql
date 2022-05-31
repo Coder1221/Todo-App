@@ -1,20 +1,20 @@
-CREATE TABLE IF NOT EXISTS users(
-    id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL, 
-    encrypted_password VARCHAR(255),
-    deleted boolean DEFAULT FALSE
+create table if not exists users(
+    id varchar(255) primary key,
+    name varchar(255) not null,
+    email varchar(255) not null, 
+    encrypted_password varchar(255),
+    deleted boolean default false
 );
 
-CREATE TABLE IF NOT EXISTS todo_lists (
-    id VARCHAR(255) PRIMARY KEY,
-    user_id VARCHAR(255) REFERENCES users(id) ON DELETE CASCADE, 
-    title VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    priority INTEGER NOT NULL,
-    status VARCHAR(255) NOT NULL DEFAULT 'OPEN',
-    created_at TIMESTAMP not NULL,
-    updated_at TIMESTAMP,
-    deleted boolean DEFAULT FALSE,
-    status_changed_on TIMESTAMP
+create table if not exists todo_lists (
+    id varchar(255) primary key,
+    user_id varchar(255) references users(id) on delete cascade, 
+    title varchar(255) not null,
+    description varchar(255) not null,
+    priority integer not null,
+    status varchar(255) not null default 'OPEN',
+    created_at timestamp not null,
+    updated_at timestamp,
+    deleted boolean default false,
+    status_changed_on timestamp
 );
