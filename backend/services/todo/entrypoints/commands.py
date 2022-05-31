@@ -2,6 +2,7 @@ from services.todo.adapters import repository
 import services.todo.domain.model as model
 from typing import List, Dict, Tuple
 import services.exceptions as errors
+import uuid
 
 
 def create_todo(
@@ -13,7 +14,11 @@ def create_todo(
 ) -> model.Todo:
     """Create a new todo"""
     todo = model.Todo(
-        user_id=user_id, title=title, description=description, status=status
+        id=str(uuid.uuid4()),
+        user_id=user_id,
+        title=title,
+        description=description,
+        status=status,
     )
     todo = repo.add(todo)
     return todo
@@ -85,3 +90,19 @@ def _priority_dict_count(todos: List[model.Todo]) -> Dict:
         except KeyError as e:
             dict_[todo.priority] = 1
     return dict_
+
+
+def delete_todo(uuid: str, repo=repository.AbstractTodoRepository) -> None:
+    """Deletes the given todo by given uuid"""
+    todo = repo.get_by_id(uuid)
+    if not todo:
+        raise errors.TodoNotFound("Todo not found")
+    repo.delete(todo)
+
+
+def all_todos_of_certain_date(
+    user_id: str, date: str, repo: repository.AbstractTodoRepository
+):
+    """Get all todos of the given date of certain user"""
+    todos_by_created_date = repo.get_by_user_id_and_date_by_priority(user_id, date)
+    return todos_by_created_date

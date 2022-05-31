@@ -145,5 +145,5 @@ def _dict_row_to_user(user_row: DictRow) -> model.User:
         id=user_row["id"],
         name=user_row["name"],
         email=user_row["email"],
-        password=user_row["encrypted_password"],
+        encrypted_password=user_row["encrypted_password"],
     )

@@ -32,3 +32,7 @@ class InvalidJwtToken(Exception):
 
 class UserNotFound(Exception):
     """Raised when a user is not found given email"""
+
+
+class TodoAttributeMissingError(Exception):
+    """Raised when a todo attribute is missing in request"""
