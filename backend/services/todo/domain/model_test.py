@@ -27,6 +27,9 @@ def test_update_status(todo_object):
     # status shoud be updated by providing enum value
     todo_object.update_status("CLOSED")
     assert todo_object.status == "CLOSED"
+    
+    todo_object.update_status("OPEN")
+    assert todo_object.status == "OPEN"
 
 
 def test_update_title(todo_object):
