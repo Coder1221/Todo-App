@@ -28,7 +28,7 @@ def valid_user_token(client=client):
         {"email": "user_for_testing@lums.edu.pk", "password": "random_string"}
     )
 
-    res = client.get(
+    res = client.post(
         "/login", headers={"Content-Type": "application/json"}, data=payload
     )
     json_data = json.loads(res.data)
@@ -46,7 +46,7 @@ def test_login_user(client=client):
     payload = json.dumps(
         {"email": "user_for_testing@lums.edu.pk", "password": "random_string"}
     )
-    res = client.get(
+    res = client.post(
         "/login", headers={"Content-Type": "application/json"}, data=payload
     )
     assert res.status_code == 200
@@ -114,3 +114,28 @@ def test_increase_priority(valid_user_token, client=client):
     repo = repo_for_todo()
     todo = repo.get_by_id(uuid_of_todo1)
     repo.delete(todo)
+
+
+def test_update_status(valid_user_token, client=client):
+    response = _create_todo(valid_user_token, client)
+
+    json_data = json.loads(response.data)
+    uuid_of_todo = json_data["todo_id"]
+
+    repo = repo_for_todo()
+    todo = repo.get_by_id(uuid_of_todo)
+    assert todo.status == "OPEN"
+
+    res = client.post(
+        "/todo/{}/updateStatus/{}".format(uuid_of_todo, "CLOSED"),
+        headers={"Content-Type": "application/json", "Authorization": valid_user_token},
+    )
+
+    assert res.status_code == 200
+    json_data = json.loads(res.data)
+    print(json_data)
+    assert json_data["success"] == True
+
+    repo = repo_for_todo()
+    todo_ = repo.get_by_id(uuid_of_todo)
+    assert todo_.status == "CLOSED"

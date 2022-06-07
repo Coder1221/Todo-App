@@ -65,3 +65,18 @@ def test_decrease_priority(user_obj, todo_object):
     with pytest.raises(errors.AlreadyOnLowPriority):
         #  it will raise error as priority can'y go below zero
         todo_commands.decrease_priority(r_todo.id, r_user.id, todo_repo)
+
+
+def test_upate_status_of_todo(user_obj, todo_object):
+    todo_repo = todo_repository.FakeTodoRepository()
+    #  Assigging the todo to user
+    todo_object.user_id = user_obj.id
+    todo_repo.add(todo_object)
+    todo = todo_repo.get_by_id(todo_object.id)
+    assert todo.status == "IN_PROGRESS"
+    todo.status = "CLOSED"
+    todo_repo.save(todo)
+
+    #  again getting that todo from repo to see if the status is udpated
+    updated_todo = todo_repo.get_by_id(todo.id)
+    assert updated_todo.status == "CLOSED"

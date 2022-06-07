@@ -17,7 +17,7 @@ def home():
     return "<h1>Flask server by Tajir<h1>"
 
 
-@app.route("/login")
+@app.route("/login", methods=["POST"])
 def login():
     body_json = request.json
     email = body_json["email"]
@@ -111,6 +111,16 @@ def delete_todo(current_user, uuid):
     try:
         todo_commands.delete_todo(uuid, repo_for_todo())
         return {"success": True, "message": "Todo deleted successfully"}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
+
+@app.route("/todo/<uuid>/updateStatus/<status>", methods=["POST"])
+@token_required
+def update_status(current_user, uuid, status):
+    try:
+        todo_commands.update_status_of_todo(uuid, status, repo_for_todo())
+        return {"success": True, "message": "Todo Updated successfully"}
     except Exception as e:
         return {"success": False, "message": str(e)}
 

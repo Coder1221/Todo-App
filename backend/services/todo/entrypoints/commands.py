@@ -108,3 +108,14 @@ def all_todos_of_certain_date(
     """Get all todos of the given date of certain user"""
     todos_by_created_date = repo.get_by_user_id_and_date_by_priority(user_id, date)
     return todos_by_created_date
+
+
+def update_status_of_todo(
+    todo_id: str, status: str, repo: repository.AbstractTodoRepository
+):
+    """Update the status if the given todo with the given status id"""
+    todo = repo.get_by_id(todo_id)
+    if not todo:
+        raise errors.TodoNotFound("Todo not found")
+    todo.update_status(status)
+    repo.save(todo)
