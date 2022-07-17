@@ -1,2 +1,1 @@
-# abdurrehman-training-project
-# Todo app by Tajir
+# Todo app in Domain Driven Design
